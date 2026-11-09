@@ -4,7 +4,7 @@ Prototipo de una plataforma web lúdica de cursos para niños, desarrollado con 
 
 - **Aprendiz:** Ivan Andres Diaz Lizcano
 - **Curso y mecánica:** Inglés — Racha diaria
-- **Aplicación publicada:** (pendiente — se completará tras el despliegue en Render)
+- **Aplicación publicada:** https://plataforma-ludica-ee5t.onrender.com
 
 ## Ejecutar en su equipo
 

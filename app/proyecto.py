@@ -10,6 +10,6 @@ MECANICA = "Racha diaria"
 
 # Dirección pública de la aplicación desplegada.
 # Ejemplo: "https://plataforma-ludica-abcd.onrender.com"
-URL_PUBLICA = ""
+URL_PUBLICA = "https://plataforma-ludica-ee5t.onrender.com"
 
 VERSION = "0.1.0"
