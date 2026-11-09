@@ -11,8 +11,8 @@ Me comprometo a cumplir las siguientes reglas durante el desarrollo de este proy
 
 | Comandos que el agente puede ejecutar sin confirmación | Comandos que requieren mi confirmación |
 | --- | --- |
-| (complete) | (complete) |
+| `pytest`, `ruff check`, `git status`, `git diff`, `uvicorn` | `git push`, modificaciones en `.env`, borrado masivo de archivos |
 
-**Nombre:** (complete)
+**Nombre:** Ivan Andres Diaz Lizcano
 
-**Fecha:** (complete)
+**Fecha:** 9 de noviembre de 2026
