@@ -13,6 +13,9 @@ Me comprometo a cumplir las siguientes reglas durante el desarrollo de este proy
 | --- | --- |
 | `pytest`, `ruff check`, `git status`, `git diff`, `uvicorn` | `git push`, modificaciones en `.env`, borrado masivo de archivos |
 
-**Nombre:** Ivan Andres Diaz Lizcano
+## Aceptación
 
-**Fecha:** 9 de noviembre de 2026
+Leí esta política y la acepto. Respondo por todo lo que entrego, lo haya escrito o no la IA.
+
+- Nombre: Ivan Andres Diaz Lizcano
+- Fecha: 2026-11-23
