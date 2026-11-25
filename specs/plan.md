@@ -4,8 +4,10 @@
 
 La aplicación sigue un diseño por capas desacopladas:
 - **`app/rutas/`**: Endpoints FastAPI y vistas Jinja2 (sin lógica de negocio).
-- **`app/servicios/`**: Lógica de negocio pura (cálculo de racha diaria, asignación de puntos, validación de sesiones).
+- **`app/servicios/`**: Lógica de negocio pura (gestión de actividades, cálculo de racha diaria, validación de sesiones).
 - **`app/modelos/`**: Entidades y tablas definidas con SQLModel (SQLite en local, PostgreSQL en Render).
+- **`app/esquemas.py`**: Esquemas de Pydantic para validación de entrada y serialización de respuestas.
+- **`app/db.py`**: Motor de conexión, creación de tablas y dependencia de sesión por petición.
 - **`app/templates/` y `app/static/`**: Interfaz HTML5 responsiva y PWA para instalación en móviles.
 
 ---
@@ -14,64 +16,47 @@ La aplicación sigue un diseño por capas desacopladas:
 
 ```mermaid
 erDiagram
-    DOCENTE ||--o{ CLASE : administra
-    CLASE ||--o{ ESTUDIANTE : contiene
-    CLASE ||--o{ TEMA : incluye
-    TEMA ||--o{ PALABRA : contiene
-    ESTUDIANTE ||--o{ SESION_PRACTICA : realiza
-    ESTUDIANTE ||--o| RACHA : tiene
-
-    DOCENTE {
-        int id PK
-        string nombre
-        string email
-    }
+    CLASE ||--o{ NINO : tiene
+    ACTIVIDAD ||--o{ PREGUNTA : contiene
+    NINO ||--o{ INTENTO : realiza
+    ACTIVIDAD ||--o{ INTENTO : recibe
 
     CLASE {
         int id PK
-        string nombre
-        string codigo_acceso
-        int docente_id FK
+        str nombre
+        str codigo
     }
 
-    ESTUDIANTE {
+    NINO {
         int id PK
-        string apodo
-        string avatar_id
+        str alias
+        str avatar
         int clase_id FK
     }
 
-    RACHA {
+    ACTIVIDAD {
         int id PK
-        int estudiante_id FK
-        int dias_actuales
-        int mejor_racha
-        date ultima_fecha_jugada
-        int puntos_totales
+        str titulo
+        str descripcion
+        int orden
     }
 
-    TEMA {
+    PREGUNTA {
         int id PK
-        string nombre
-        string icono
+        str enunciado
+        str opciones
+        str respuesta_correcta
+        int actividad_id FK
     }
 
-    PALABRA {
+    INTENTO {
         int id PK
-        string palabra_en
-        string traduccion_es
-        string audio_url
-        string imagen_url
-        int tema_id FK
-    }
-
-    SESION_PRACTICA {
-        int id PK
-        int estudiante_id FK
-        datetime fecha_hora
+        int nino_id FK
+        int actividad_id FK
         int aciertos
-        int errores
-        int puntos_ganados
+        int total
+        int duracion_segundos
+        datetime fecha
     }
 ```
 
@@ -83,13 +68,15 @@ erDiagram
 |---|---|---|---|
 | GET | `/salud` | Verificación de estado del servidor | `{"estado": "ok"}` |
 | GET | `/api/proyecto` | Metadatos y datos del aprendiz | Objeto `DatosProyecto` |
-| POST | `/api/clases/entrar` | Valida código de clase y retorna avatares | Lista de estudiantes/avatares |
-| POST | `/api/estudiantes/sesion` | Inicia sesión del niño con su avatar | Token o sesión activa |
-| GET | `/api/estudiantes/{id}/racha` | Obtiene racha actual y puntos acumulados | `{"dias": int, "puntos": int}` |
-| POST | `/api/actividades/completar` | Registra resultado y actualiza racha | Resultado y bonificación |
-| GET | `/api/docente/clase/{id}/reporte`| Métricas de avance de los estudiantes | Resumen para el docente |
+| GET | `/api/version` | Versión actual del proyecto | `{"version": str}` |
+| GET | `/api/actividades` | Lista de actividades ordenadas por `orden` con sus preguntas | `200` |
+| POST | `/api/actividades` | Crea una actividad con sus preguntas (mínimo 5) | `201` / `422` |
+| GET | `/api/actividades/{id}` | Consulta una actividad por identificador | `200` / `404` |
+| PUT | `/api/actividades/{id}` | Actualiza una actividad y reemplaza sus preguntas | `200` / `404` / `422` |
+| DELETE | `/api/actividades/{id}` | Elimina una actividad y sus preguntas asociadas | `204` / `404` |
 
 ---
 
 ## Decisiones arquitectónicas (ADR)
-Las decisiones de diseño clave se encuentran documentadas en [`specs/adr/`](file:///C:/Users/Aprendiz/Documents/tarea4/plantilla-plataforma-ludica/specs/adr/).
+
+Las decisiones de diseño clave se encuentran documentadas en `specs/adr/`.
