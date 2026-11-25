@@ -26,6 +26,7 @@ Roles: docente y niño. El niño entra con código de clase y avatar, sin correo
 - `app/rutas/`: reciben la petición y llaman a los servicios; sin regla de negocio
 - `app/servicios/`: regla de negocio, con pruebas propias
 - `app/modelos/`: tablas de SQLModel
+- `app/esquemas.py`: esquemas de Pydantic para validación de peticiones y respuestas
 - `app/templates/` y `app/static/`: interfaz y PWA
 - `tests/`: pruebas; `tests/aceptacion/`: criterios de la especificación
 
@@ -46,3 +47,7 @@ Roles: docente y niño. El niño entra con código de clase y avatar, sin correo
 ## Lecciones aprendidas
 
 Cada vez que el agente se equivoque, escriba aquí la regla que evita repetir el error.
+
+- Las dependencias de FastAPI se declaran con `Annotated[Session, Depends(obtener_sesion)]`, porque Ruff rechaza `Depends` como valor por defecto (`B008`).
+- El campo `opciones` de `Pregunta` debe declararse con `Field(sa_column=Column(JSON))`, porque SQLModel no infiere un tipo SQL nativo para `list[str]`.
+- Los endpoints reciben esquemas de Pydantic dedicados (`app/esquemas.py`) en lugar de los modelos de tabla, para que FastAPI valide y devuelva código `422` automáticamente.
